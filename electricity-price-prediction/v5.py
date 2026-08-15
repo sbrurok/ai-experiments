@@ -54,8 +54,8 @@ class Model:
         y_pred = K @ self.alpha_hat
         return y_pred
     
-    def submit_csv(self, y_pred):
-        np.savetxt('data/submission.csv', y_pred, delimiter=',', header='price_CHF', comments='') 
+    def save_csv(self, y_pred):
+        np.savetxt('data/result.csv', y_pred, delimiter=',', header='price_CHF', comments='') 
 
 def load_dfs(for_cv=False):
     # loads and preprosseses the trainig data
@@ -171,32 +171,30 @@ def visualize_tuning(param_dict, cv_result):
 def main():
 
     # Cross validation
-    # X_train, y_train, X_test = load_dfs(for_cv=True)
+    X_train, y_train, X_test = load_dfs(for_cv=True)
 
-    # param_dict = {
-    # "lambdas": np.logspace(-16, 3, 20),
-    # "gammas":  np.logspace(-16, 3, 20)
-    # }
+    param_dict = {
+    "lambdas": np.logspace(-16, 3, 20),
+    "gammas":  np.logspace(-16, 3, 20)
+    }
 
-    # cv_result = cross_validate(X_train=X_train, y_train=y_train, param_dict=param_dict)
-    # np.set_printoptions(suppress=True)
+    cv_result = cross_validate(X_train=X_train, y_train=y_train, param_dict=param_dict)
+    np.set_printoptions(suppress=True)
 
-    # visualize_tuning(param_dict=param_dict, cv_result=cv_result)
+    visualize_tuning(param_dict=param_dict, cv_result=cv_result)
 
     # best params: lam = 0.1, gamma = 0.15
 
-    # Treining for subission
-    # X_train, y_train, X_test = load_dfs(for_cv=False)
-    # lam = 0.1
-    # gamma = 0.15
+    # Training
+    X_train, y_train, X_test = load_dfs(for_cv=False)
+    lam = 0.1
+    gamma = 0.15
 
-    # model = Model()
-    # model.fit(X_train, y_train, lam=lam, gamma=gamma)
-    # y_pred = model.predict(X_test, X_train, gamma=gamma)
+    model = Model()
+    model.fit(X_train, y_train, lam=lam, gamma=gamma)
+    y_pred = model.predict(X_test, X_train, gamma=gamma)
 
-    # model.submit_csv(y_pred)
-
-    pass
+    model.save_csv(y_pred)
 
 if __name__ == '__main__':
     main()
