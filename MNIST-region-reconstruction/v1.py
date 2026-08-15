@@ -41,7 +41,7 @@ def training(train_data_input, train_data_label):
     dataset = TensorDataset(train_data_input, train_data_label)
     data_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    n_epochs = 10 #######
+    n_epochs = 2 #######
 
     for epoch in range(n_epochs):
         for x, y in tqdm(
@@ -81,11 +81,11 @@ def testing(model, test_data_input):
     save_data_clipped = np.clip(test_data_output, 0, 255)
     save_data_uint8 = save_data_clipped.astype(np.uint8)
 
-    # For submission
+    # For results
     save_data = np.zeros_like(save_data_uint8)
     save_data[:, :, 10:18, 10:18] = save_data_uint8[:, :, 10:18, 10:18]
 
-    filepath = f'submissions/submission_{Path(__file__).stem}.npz'
+    filepath = f'results/result_{Path(__file__).stem}.npz'
     np.savez_compressed(file=filepath, data=save_data)
 
 def visualize(filepath):
@@ -129,7 +129,7 @@ class Model(nn.Module):
             nn.BatchNorm2d(32),
             nn.ReLU(),
 
-            nn.MaxPool2d(2),
+            nn.MaxPool2d(2), # 28x28 -> 14x14
 
             nn.Conv2d(32, 64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64),
@@ -139,7 +139,7 @@ class Model(nn.Module):
             nn.BatchNorm2d(64),
             nn.ReLU(),
 
-            nn.MaxPool2d(2), 
+            nn.MaxPool2d(2), # 14x14 -> 7x7
 
             nn.Conv2d(64, 128, kernel_size=3, padding=1),
             nn.BatchNorm2d(128),
@@ -186,7 +186,7 @@ def main():
 
     testing(model, test_data_input)
 
-    visualize(filepath='submissions/submission_v1.npz')
+    visualize(filepath='results/result_v1.npz')
 
     return None
 
