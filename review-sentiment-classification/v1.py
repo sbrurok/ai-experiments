@@ -13,7 +13,7 @@ from transformers import AutoModelForSequenceClassification
 DEVICE = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
 MODEL_NAME = "distilbert-base-uncased"
 MODEL_DIR = "models/v1"
-TRAIN_MODEL = True
+TRAIN_MODEL = False
 BATCH_SIZE = 10
 NUM_EPOCHS = 1
 
